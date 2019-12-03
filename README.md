@@ -1,5 +1,4 @@
-# WS28XX
-dimmable woodlamps with arduino, WS2812 and epoxy resin
+# dimmable woodlamps with arduino, WS2812 and epoxy resin
 
 Just white/dimmable
 ![Image ring lamp](https://github.com/Daniel595/WS28XX/blob/master/ring_white.jpg)
