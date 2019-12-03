@@ -5,7 +5,7 @@
 #endif
 
 //Number of Pixels used in this lamp
-#define NUM_PIXELS 41
+#define NUM_PIXELS 52
 
 //Used Pins in this application
 #define LED_PIN 6           //output for controling the LEDs of the lamp
@@ -17,7 +17,7 @@
 #define STATE_LED_RAINBOW 1 //switch == 1 -> leds rainbow
 
 //define the speed of the rainbow-"flow"
-#define RAINBOW_SPEED 60    //the bigger the value, the slower the flow so -> 1 is the fastest
+#define RAINBOW_SPEED 15    //the bigger the value, the slower the flow so -> 1 is the fastest
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);   
 
@@ -25,6 +25,13 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, LED_PIN, NEO_GRB + NEO_K
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
+
+typedef struct {
+  int red;
+  int green;
+  int blue;
+}color_of_lamp;
+
 
 void setup() {
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
@@ -49,22 +56,7 @@ void loop() {
   static int poti_value = 0;        //analog value from poti
   static int dip_switch_state = 0;
 
-    // map the range
-  int red = map(poti_value, 0, 1023, 19, 190);
-  int green = map(poti_value, 0, 1023, 18, 185);
-  int blue = map(poti_value, 0, 1023, 3, 30);
-
-  Serial.print("poti = ");
-  Serial.print(poti_value);
-  Serial.print("\tred = ");
-  Serial.print(red);
-  Serial.print("\t green = ");
-  Serial.print(green);
-  Serial.print("\t blue = ");
-  Serial.println(blue);
-  
-
-  //set Brightness to maimum
+  //set Brightness to maximum
   strip.setBrightness(255);
   // read the analog signal from the poti:
   poti_value = analogRead(POTI_PIN);
@@ -79,20 +71,36 @@ void loop() {
  }
 
 
+//dimmable white LED's
 static void led_white(int poti_value){
-
-  if(poti_value <= 300){
-    poti_value = 300;
-  }
-  // map the range
-  int red = map(poti_value, 300, 1024, 19, 190);
-  int green = map(poti_value, 300, 1024, 18, 185);
-  int blue = map(poti_value, 300, 1024, 3, 30);
+  static color_of_lamp current_color;
   
+  // map the poti value to the single rgb-values
+  current_color.red = map(poti_value, 0, 1024, 19, 190);
+  current_color.green = map(poti_value, 0, 1024, 18, 185);
+  current_color.blue = map(poti_value, 0, 1024, 3, 30);
+  
+  //a little filter aigainst "jitter"
+  current_color = get_color_to_set(current_color);
 
-  strip.fill(strip.Color(red, green, blue), 0, NUM_PIXELS);
+  //set the color
+  strip.fill(strip.Color(current_color.red, current_color.green,current_color.blue), 0, NUM_PIXELS);
   strip.show();
   delay(10);
+}
+
+
+//small filter to eliminate "jitter" of the light
+color_of_lamp get_color_to_set(color_of_lamp new_color){
+  static color_of_lamp current_color = {0};
+
+  if( (abs(current_color.red - new_color.red)) > 3){
+    current_color.red = new_color.red;
+    current_color.green = new_color.green;
+    current_color.blue = new_color.blue;
+  }
+
+  return current_color;
 }
 
 
