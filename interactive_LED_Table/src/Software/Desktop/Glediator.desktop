@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Glediator
-Comment=launch gled
-Icon=/home/pi/Downloads/Glediator.gif
-Exec=sudo bash /home/pi/LEDTable/Glediator/Glediator_start.sh
-Type=Application
-Encoding=UTF-8
-Terminal=true
-Categories=None;

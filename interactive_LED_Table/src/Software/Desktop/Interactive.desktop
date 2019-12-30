@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Interactive
-Comment=launch interactive mode
-Icon=/home/pi/Downloads/touch.gif
-Exec=sudo bash LEDTable/launch_interactive.sh
-Type=Application
-Encoding=UTF-8
-Terminal=false
-Categories=None;
