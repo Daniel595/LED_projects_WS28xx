@@ -10,10 +10,8 @@ In return it starts up very quickly and you never have to access a GUI.
 
 Similarities:
 
-I used all circuits from Deconinck like  
-1. "sniffing" the UART-communication from the Nanos 
-2. of course for the detection matrix (Soldering is a hard piece of work)
-3. the principle to get the measurement values
+1. I used all circuits from Deconinck like "sniffing" the UART-communication from the Nanos and of course for the detection matrix (Soldering is a hard piece of work)
+3. the principle to get measurement values
 4. the straw trick :-)
 
 
