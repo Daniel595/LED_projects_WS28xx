@@ -1,13 +1,9 @@
 Simplification:
-
-This table has not such cool "light pattern" as Deconink's because Glediator does not work.
-Therefore it starts up very quickly and you never have to access any GUI. 
+This table has not such cool "light pattern" as Deconink's because Glediator does not work here.
+In return it starts up very quickly and you never have to access a GUI. 
 
 I use 3 "Arduinos". Once i did it with 2 Arduinos and 1 Raspberry Pi like http://blog.deconinck.info/post/2016/12/19/A-Dirt-Cheap-F-Awesome-Led-Table. 
 I replaced the RPI with a arduino to avoid the long booting-time. A nano was to weak (not enough RAM), instead I use a STM32 STM32F103C8T6 Development Board (20k RAM) for ~3€. You need a FTDI adapter to flash it or to write a bootloader but it works well with Arduino IDE.
-
-
-
 
 
 Similarities:
