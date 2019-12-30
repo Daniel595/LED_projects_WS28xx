@@ -1,4 +1,5 @@
 Simplification:
+
 This table has not such cool "light pattern" as Deconink's because Glediator does not work here.
 In return it starts up very quickly and you never have to access a GUI. 
 
@@ -9,6 +10,7 @@ I replaced the RPI with a arduino to avoid the long booting-time. A nano was to 
 Similarities:
 The table is very similar to Deconink's. 
 I used all his circuits like for "sniffing" the UART-communication from the Nanos and of course for the IR-LED matrix.
+(Soldering is a hard piece of work)
 
 
 Difference:
