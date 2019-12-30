@@ -8,12 +8,16 @@ I replaced the RPI with a arduino to avoid the long booting-time. A nano was to 
 
 
 Similarities:
+
+
 The table is very similar to Deconink's. 
 I used all his circuits like for "sniffing" the UART-communication from the Nanos and of course for the IR-LED matrix.
 (Soldering is a hard piece of work)
 
 
-Difference:
+Differences:
+
+
 I can't run Glediator from the STM32 but it starts up in about 1 second (instead of ~1min.).
 I use 2 switches - one for interactive/passive mode and one to start/end calibration. 
 In passive mode I shut down the touch detection. Calibration works the same as Deckonink's. 
