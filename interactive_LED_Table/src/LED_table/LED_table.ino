@@ -21,11 +21,14 @@ class LED_cell{
     LED_cell();
     void update_cell(int new_value);      // check the new measurement value and set a valid state
     void calibrate(int new_value);        // check the new measurement value and calibrate cell
+    void reset_calibration();             // delete information from last calibration
     void initialize(int col, int row);    // initialize the cell and set the absolut number of it
     uint32_t Wheel(byte WheelPos);        // return a color value (from WS2812B example)
     uint16_t get_num();                   // return the absolut strip-number of the cell
     void set_color(uint32_t color);       // set the current pixel color
     void light();                         // check the current state and turn the LED on/off
+    void set_fade(int ticks);
+    void fading_tick();
     
   private:
     uint8_t state;                // state for pixel on/off
@@ -34,6 +37,11 @@ class LED_cell{
     int min_val;                  // calibration value min
     int threshold;                // calibration value threshhold (min + (max - min) * 0.3 )
     uint32_t color;               // current pixel color
+    int fade_ticks;               // 
+    float fading;                 //
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
     
 };
 
@@ -43,6 +51,30 @@ LED_cell::LED_cell(){
   this->min_val = 1020;
   this->color = strip.Color(0,0,0);
   this->state = LED_OFF;
+  this->fade_ticks = 0;
+  this->fading = 0.95;
+  this->red=0;
+  this->green=0;
+  this->blue=0;
+}
+
+void LED_cell::set_fade(int ticks){
+  this->fade_ticks = ticks;
+  this->red = (this->color >> 16) & B11111111;
+  this->green = (this->color >> 8) & B11111111;
+  this->blue = this->color & B11111111;
+}
+
+void LED_cell::fading_tick(){
+  if(this->fade_ticks > 0){
+    strip.setPixelColor(this->num, strip.Color(this->red,this->green,this->blue));
+    this->fade_ticks --;
+    this->red *= fading;
+    this->green*= fading;
+    this->blue*= fading;
+  }else{
+    strip.setPixelColor(this->num, strip.Color(0,0,0));
+  }
 }
 
 void LED_cell::set_color(uint32_t color){
@@ -93,6 +125,11 @@ void LED_cell::calibrate(int new_value){
   this->threshold = this->min_val + (this->max_val - this->min_val) * 0.3;
 }
 
+void LED_cell::reset_calibration(){
+  this->max_val = 0;
+  this->min_val = 1023;
+}
+
 
 
 // ############### commands ###################
@@ -120,7 +157,7 @@ void setup() {
 
 // ############### Methods ########################
 uint8_t validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]);
-uint8_t calibration_switch(uint8_t mode);
+uint8_t calibration_switch(uint8_t mode, LED_cell mat[COL_NUM][ROW_NUM]);
 bool mode_switch();
 void rainbowCycle();
 void rainbowCycle_Cells(LED_cell mat[COL_NUM][ROW_NUM]);
@@ -153,7 +190,7 @@ void loop() {
 
       // INTERACTIVE MODE
       if(detection_mode == INTERACTIVE){
-        mode = calibration_switch(mode);                        // check calibration switch
+        mode = calibration_switch(mode, mat);                   // check calibration switch 
         Serial1.readBytes(read_buffer, 1);                      // read one byte until its the "start" byte
         if((read_buffer[0]&command_mask) == START){             // start command?
             current_col = read_buffer[0] & data_mask;               // set current collumn
@@ -174,9 +211,34 @@ void loop() {
      // PASSIVE MODE
      else{ 
       mode = RUN;
+
+      // ########### fading random pixel sketch 
+      int num_on = random(3);
+      for(int i = 0; i<num_on; i++){
+        int col = random(COL_NUM);
+        int row = random(ROW_NUM);
+        mat[col][row].set_color(strip.Color(random(128), random(128), random(128)));
+        mat[col][row].set_fade(random(5000));
+        //mat[col][row].set_fade(5000);
+      }
+
+      for(int col=0; col<COL_NUM; col++){
+        for(int row=0; row<ROW_NUM; row++){
+          mat[col][row].fading_tick();
+        }
+      }
+      delay(50); 
+
+      // ############## rainbow sketch
+      /*
       rainbowCycle();   // run a usual rainbow-sketch
       delay(10);
-      strip.show();                         
+      */
+
+
+      
+      strip.show();          
+                    
      }
   }
 }
@@ -241,12 +303,17 @@ void rainbowCycle_Cells(LED_cell mat[COL_NUM][ROW_NUM])
 }
 
 
-uint8_t calibration_switch(uint8_t mode){
+uint8_t calibration_switch(uint8_t mode, LED_cell mat[COL_NUM][ROW_NUM]){
   static int last_state = LOW;
   int current_state = digitalRead(CAL_PIN);
   if(current_state==HIGH && last_state==LOW ){
     last_state = current_state;
     if(mode == RUN){
+      for(int col = 0; col < COL_NUM; col++){
+        for(int row=0; row < ROW_NUM; row++){
+          mat[col][row].reset_calibration();
+        }
+      }
       return CAL;
     }else{
       return RUN;
