@@ -1,4 +1,4 @@
-# LED_projects_WS28xx
+# LED_projects_WS28xx (Arduino only)
 
 1. lamps made of wood, WS2812B, epoxy-resin and arduino. The code is actually not so interesting but the lamps are looking great
 
