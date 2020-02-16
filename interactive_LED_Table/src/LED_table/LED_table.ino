@@ -52,7 +52,7 @@ LED_cell::LED_cell(){
   this->color = strip.Color(0,0,0);
   this->state = LED_OFF;
   this->fade_ticks = 0;
-  this->fading = 0.95;
+  this->fading = 0.9;
   this->red=0;
   this->green=0;
   this->blue=0;
@@ -99,19 +99,19 @@ void LED_cell::light(){
   if(this->state == LED_ON){
     strip.setPixelColor(this->num, this->color);
   }else{
-    strip.setPixelColor(this->num, strip.Color(0,0,0));
+    this->fading_tick();
   }
 }
 
 void LED_cell::update_cell(int new_value){
   if(new_value >= this->threshold){
     this->state = LED_ON;
-    this->light();
+    this->set_fade(50);
   }
   else{
     this->state = LED_OFF;
-    this->light();
   }
+  this->light();
 }
 
 
@@ -219,8 +219,7 @@ void loop() {
         int col = random(COL_NUM);
         int row = random(ROW_NUM);
         mat[col][row].set_color(strip.Color(random(128), random(128), random(128)));
-        mat[col][row].set_fade(random(5000));
-        //mat[col][row].set_fade(5000);
+        mat[col][row].set_fade(random(1000));
       }
 
       for(int col=0; col<COL_NUM; col++){
