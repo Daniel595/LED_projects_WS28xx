@@ -10,7 +10,7 @@ LED table in action:
 Hand and paper
 ![LED table in action](https://github.com/Daniel595/LED_projects_WS28xx/blob/master/interactive_LED_Table/pictures/LED_table.jpg)
 
-Bowl, paper, gift card, spoon
+Bowl, tissue, gift card, spoon, glass with cinnamon
 ![LED table in action](https://github.com/Daniel595/LED_projects_WS28xx/blob/master/interactive_LED_Table/pictures/IMAG0178.jpg)
 
 Plant, cups, teapot
