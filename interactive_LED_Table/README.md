@@ -7,8 +7,11 @@ In return it starts up very quickly and you never have to access a GUI.
 
 
 LED table in action:
+Hand and paper
 ![LED table in action](https://github.com/Daniel595/LED_projects_WS28xx/blob/master/interactive_LED_Table/pictures/LED_table.jpg)
 
+Bowl, paper, gift card, spoon
 ![LED table in action](https://github.com/Daniel595/LED_projects_WS28xx/blob/master/interactive_LED_Table/pictures/IMAG0178.jpg)
 
+Plant, cups, teapot
 ![LED table in action](https://github.com/Daniel595/LED_projects_WS28xx/blob/master/interactive_LED_Table/pictures/IMAG0179.jpg)
