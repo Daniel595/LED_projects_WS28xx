@@ -5,7 +5,7 @@
 #endif
 
 //Number of Pixels used in this lamp
-#define NUM_PIXELS 52
+#define NUM_PIXELS 40
 
 //Used Pins in this application
 #define LED_PIN 6           //output for controling the LEDs of the lamp
@@ -44,7 +44,7 @@ void setup() {
   strip.setBrightness(255);
   strip.show(); // Initialize all pixels to 'off'
 
-  pinMode(DIP_SWITCH_PIN, INPUT);
+  pinMode(DIP_SWITCH_PIN, INPUT_PULLUP);
 
   Serial.begin(9600);
 }
@@ -62,12 +62,12 @@ void loop() {
   poti_value = analogRead(POTI_PIN);
   //read the digital signal from the dip-switch:
   dip_switch_state = digitalRead(DIP_SWITCH_PIN);
-  
   switch(dip_switch_state){
     case STATE_LED_WHITE: led_white(poti_value); break;
     case STATE_LED_RAINBOW: rainbowCycle(RAINBOW_SPEED); break;
     default: rainbowCycle(RAINBOW_SPEED); break;
   }
+  
  }
 
 
