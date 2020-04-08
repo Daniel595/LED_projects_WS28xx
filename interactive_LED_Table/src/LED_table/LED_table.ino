@@ -156,9 +156,9 @@ void setup() {
 
 
 // ############### Methods ########################
-uint8_t validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]);
+void validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]);
 uint8_t calibration_switch(uint8_t mode, LED_cell mat[COL_NUM][ROW_NUM]);
-bool mode_switch();
+uint8_t mode_switch();
 void rainbowCycle();
 void rainbowCycle_Cells(LED_cell mat[COL_NUM][ROW_NUM]);
 
@@ -194,14 +194,15 @@ void loop() {
         Serial1.readBytes(read_buffer, 1);                      // read one byte until its the "start" byte
         if((read_buffer[0]&command_mask) == START){             // start command?
             current_col = read_buffer[0] & data_mask;               // set current collumn
-            rainbowCycle_Cells(mat);                                // set LED-values 
+            // after start-byte the measurements will be done so we have time to do some expensive stuff 
+            rainbowCycle_Cells(mat);                                // generate and set all LED-values in the rainbowcycle style from neopixel
             Serial1.readBytes(read_buffer, BUFFER_SIZE - 1);        // read all bytes from arduino 1 and 2 
-            validate(read_buffer, data);                            // extract and validate data from buffer     
-            for(int i=0; i<ROW_NUM; i++){                           // update the current collumn (all rows in this col)
+            validate(read_buffer, data);                            // extract and validate the received data from buffer 
+            for(int i=0; i<ROW_NUM; i++){                           // update the current collumn (all rows in this col) with the new data
              if(mode == RUN){
-               mat[current_col][i].update_cell(data[i]);            // case RUN
+               mat[current_col][i].update_cell(data[i]);            // case RUN - check if LED on or off
              }else{
-               mat[current_col][i].calibrate(data[i]);              // case CALIBRATION
+               mat[current_col][i].calibrate(data[i]);              // case CALIBRATION - check for min/max values
              }
             }
             if(mode == RUN) strip.show();                           // show LED-strip
@@ -233,9 +234,6 @@ void loop() {
       rainbowCycle();   // run a usual rainbow-sketch
       delay(10);
       */
-
-
-      
       strip.show();          
                     
      }
@@ -244,7 +242,7 @@ void loop() {
 
 
 
-// ############### Methods ###################
+// ############### helper Functions ###################
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
 uint32_t Wheel(byte WheelPos) 
@@ -350,7 +348,7 @@ uint8_t mode_switch(uint8_t detection_mode){
   //           [ETX]
   //    A2:    [MSB_7][LSB_7],[MSB_8][LSB_8], [MSB_9][LSB_9], [MSB_10][LSB_10], [MSB_11][LSB_11], [MSB_12][LSB_12]
   //           [ETX]
-uint8_t validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]){
+void validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]){
   // check for correct ETX and ACK
   if( ((read_buffer[0] & command_mask) == ACK)      // ACK correct?
       && ((read_buffer[13] & command_mask) == ETX)  // ETX from A1 correct?
@@ -362,7 +360,5 @@ uint8_t validate(unsigned char read_buffer[BUFFER_SIZE], int data[ROW_NUM]){
        else {cnt = 2*i + 2; }
        data[i] = (int)(read_buffer[cnt] << 5) | read_buffer[cnt+1];
     }
-    return 1;
   }
-  return 0;
 }
