@@ -10,7 +10,7 @@ Variation of the lamp
 ![Image ring lamp](https://github.com/Daniel595/WS28XX/blob/master/LED_woodlamps/pictures/wild_white.jpg)
 
 Control unit: dip - select white/rainbow, on/off, poti - dimmer
-![Image ring lamp](https://github.com/Daniel595/WS28XX/blob/master/LED_woodlamps/pictures/control_unit.jpg)
+![Control unit](https://github.com/Daniel595/WS28XX/blob/master/LED_woodlamps/pictures/control_unit.jpg)
 
-![Image ring lamp](https://github.com/Daniel595/WS28XX/blob/master/LED_woodlamps/pictures/circuit.png)
+![Control unit circuit](https://github.com/Daniel595/WS28XX/blob/master/LED_woodlamps/pictures/circuit.PNG)
 
